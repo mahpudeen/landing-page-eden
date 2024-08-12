@@ -1,0 +1,128 @@
+.nav-main {
+    height: 68px;
+    background: #FFFFFF;
+}
+.nav-main-container {
+    height: 68px;
+    background: #FFFFFF;
+    width: 975px;
+    list-style-type: none;
+    color: #333333;
+}
+.nav-main2 {
+    height: 68px;
+    background: #F4F8EC;
+}
+.nav-main-container2 {
+    height: 68px;
+    background: #F4F8EC;
+    width: 975px;
+    list-style-type: none;
+    color: #333333;
+}
+.nav-logo-img {
+    width:160px;
+    height:40px
+}
+.nav-item-img {
+    margin-left: -12px;
+    margin-right: -4px;
+}
+.nav-item-custom {
+    margin-left: -4px;
+    margin-right: -4px;
+}
+.nav-item-link {
+    padding: 8px;
+}
+.nav-menu {
+    color: #333333;
+}
+.nav-menu:hover {
+    color: #8DB53F;
+}
+.nav-menu-active {
+    color: #8DB53F;
+}
+.nav-black-link {
+    font-size: 14px;
+    margin-top: 2px;
+    color: #333333;
+}
+.nav-black-link:hover {
+    font-size: 14px;
+    margin-top: 2px;
+    color: #333333;
+    text-decoration: underline;
+}
+.nav-lang {
+    margin-right:6px;
+    margin-top:-3px
+}
+.nav-mobile {
+    height: 56px;
+    background: #FFFFFF;
+    position: fixed;
+    top: 0;
+    z-index: 11;
+    width: 100%;
+}
+.nav-mobile-padding {
+    padding: 24px;
+}
+.nav-mobile-contact {
+    margin-top: 8px;
+}
+.nav-mobile-menu-box {
+    margin-top: 32px;
+}
+.nav-mobile-menu {
+    font-weight: 500;
+    font-size: 16px;
+    color: #333333;
+}
+.nav-mobile-menu-active {
+    font-weight: 500;
+    font-size: 16px;
+    color: #8DB53F;
+}
+.nav-mobile-menu:hover {
+    color: #8DB53F;
+}
+.nav-mobile-menu-active:hover {
+    color: #8DB53F;
+}
+.nav-mobile-divider {
+    border-top: 1px solid #e8f0d9;
+    margin-top: 10px;
+    margin-bottom: 16px;
+}
+.nav-accordion-title {
+    margin-left:-14px
+}
+.nav-accordion-box {
+    padding: 0px 10px; 
+    margin-bottom:20px
+}
+.nav-accordion-title-item {
+    margin-bottom:18px
+}
+.nav-mobile-mitra {
+    margin-top: 32px;
+}
+@media only screen and (max-width: 974px) {
+    .nav-mitra {
+        font-weight: 700;
+        color: #FFFFFF;
+        background-color: #8DB53F;
+        padding: 16px;
+    }
+}
+@media only screen and (min-width: 975px) {
+    .nav-mitra {
+        font-weight: 700;
+        color: #FFFFFF;
+        background-color: #8DB53F;
+        padding: 12px 16px;
+    }
+}

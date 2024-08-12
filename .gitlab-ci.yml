@@ -1,0 +1,31 @@
+include:
+  - project: 'company-profile/0-init-infra/gitlab-ci'
+    file:
+      - 'check-code.yml'
+      - 'sonarqube-check.yml'
+      # - 'cypress-test.yml'
+      # - 'cypress-push.yml'
+      - 'build-image.yml'
+      - 'deploy-image.yml'
+
+stages:
+  # - check
+  # - test
+  # - reconfig
+  - build
+  - deploy
+  - check
+  - test
+
+before_script:    
+  - >
+    if [ "$CI_COMMIT_BRANCH" == "staging" ]; then
+      cp $STAGING_ENV docker/.env
+    else
+      cp $MASTER_ENV docker/.env
+    fi
+
+
+# Cypress Test:
+#   script:
+#     - npm run test:linux --modul=User

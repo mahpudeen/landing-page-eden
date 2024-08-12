@@ -1,0 +1,150 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: nuxt
+  namespace: v3-compro-production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nuxt
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 33%
+  template:
+    metadata:
+      labels:
+        app: nuxt
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: image-production
+        image: git.edenfarm.id:5050/company-profile/v3-redesign/fe-nuxt-v.2.x/master:<VERSION>
+        ports:
+          - containerPort: 80 
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: "500m"
+          limits:
+            memory: "500Mi"
+            cpu: "2000m"
+        volumeMounts:
+        - name: tz-config
+          mountPath: /etc/localtime
+      tolerations:
+      - key: instance_type
+        value: on-spot
+        effect: NoSchedule
+        operator: Equal
+      - key: "node.kubernetes.io/unreachable"
+        operator: "Exists"
+        effect: "NoExecute"
+        tolerationSeconds: 300
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: role
+                operator: In
+                values:
+                - spot-devops
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - nuxt
+            topologyKey: kubernetes.io/hostname    
+      volumes:
+        - name: tz-config
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Jakarta
+            type: File
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-frontend
+  namespace: v3-compro-production
+  labels:
+    app: nuxt
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  selector:
+    app: nuxt
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-nuxt
+  namespace: v3-compro-production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 75
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cert-frontend-nuxt
+  namespace: v3-compro-production
+spec:
+  dnsNames:
+    - www.edenfarm.id
+  secretName: nuxt-tls
+  issuerRef:
+    name: letsencrypt-cluster-issuer
+    kind: ClusterIssuer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: v3-compro-production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  name: ing-nuxt
+spec:
+  tls:
+  - hosts:
+    - www.edenfarm.id
+    secretName: nuxt-tls
+  rules:
+  - host: www.edenfarm.id
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: svc-frontend
+            port: 
+              number: 80
